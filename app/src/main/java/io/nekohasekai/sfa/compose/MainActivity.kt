@@ -954,12 +954,7 @@ class MainActivity :
             }
         }
         val showGroupsInNav = dashboardUiState.hasGroups
-        val showConnectionsInNav =
-            if (isRemote) {
-                remoteConnected
-            } else {
-                currentServiceStatus == Status.Started || currentServiceStatus == Status.Starting
-            }
+        val connectionsAvailable = if (isRemote) remoteConnected else currentServiceStatus == Status.Started
 
         val railScreens =
             buildList {
@@ -967,7 +962,7 @@ class MainActivity :
                 if (showGroupsInNav) {
                     add(Screen.Groups)
                 }
-                if (showConnectionsInNav) {
+                if (connectionsAvailable) {
                     add(Screen.Connections)
                 }
                 add(Screen.Log)
@@ -984,7 +979,7 @@ class MainActivity :
                 if (useNavigationRail && showGroupsInNav) {
                     add(Screen.Groups.route)
                 }
-                if (useNavigationRail && showConnectionsInNav) {
+                if (useNavigationRail && connectionsAvailable) {
                     add(Screen.Connections.route)
                 }
             }
@@ -1398,7 +1393,6 @@ class MainActivity :
                 showGroupsSheet = false
             }
         }
-        val connectionsAvailable = if (isRemote) remoteConnected else currentServiceStatus == Status.Started
         LaunchedEffect(connectionsAvailable) {
             if (!connectionsAvailable) {
                 showConnectionsSheet = false
